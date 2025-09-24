@@ -1,2 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<!--<html lang="en">-->
+<html th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link shortener</title>
+</head>
+<h1 align="center">Сайт по сокращению ссылок</h1>
+<body>
+    <form>
+        <label for="code"></label><input type="text" id="code" placeholder="Введите ссылку">
+        <button type="submit">Отправить</button>
+    </form>
+    <p text="${linkShorter}">Сокращенная ссылка</p>
+</body>
