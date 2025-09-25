@@ -1,16 +1,23 @@
 package com.example.controller;
 
 import com.example.impl.InMemoryLinkDAO;
-import com.example.model.Link;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("api/v1/generatorLink")
+import java.util.concurrent.atomic.AtomicLong;
+
+@Controller
+@RequestMapping("/api/v1/generator_shortener_link")
 public class ControllerGeneratorLink {
-    private InMemoryLinkDAO memoryLink = new InMemoryLinkDAO();
+    private final InMemoryLinkDAO memoryLink;
+
+    private static final AtomicLong counter = new AtomicLong(0);
     private static final String BASE62_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static long counter = 0;
+
+    public ControllerGeneratorLink(InMemoryLinkDAO memoryLink) {
+        this.memoryLink = memoryLink;
+    }
 
     private static String encodeCounterToBase62(long id) {
         if (id == 0) {
@@ -28,23 +35,32 @@ public class ControllerGeneratorLink {
     }
 
     public static String generateShortLink() {
-        synchronized (ControllerGeneratorLink.class) {
-            counter++;
-            return encodeCounterToBase62(counter);
-        }
+        long currentId = counter.incrementAndGet();
+        return encodeCounterToBase62(currentId);
     }
 
-    @GetMapping("/")
-    public String showHomePage(Model model) {
-        model.addAttribute("linkShorter", generateShortLink());
-
-        return "markup";
+    @GetMapping("get_shortener_link")
+    public String showHomePage(@ModelAttribute("originalLink") String originalLink, Model model) {
+        try {
+            model.addAttribute("linkShortener", memoryLink.getLINK().get(originalLink));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "home";
     }
 
     @PostMapping("save_link")
-    public String saveLink(@RequestBody Link link) {
-        memoryLink.saveLink(link.getId(), link.getLink());
+    public String handleShortenRequest(@ModelAttribute("originalLink") String originalLink, Model model) {
+        String generatedShortLink = generateShortLink();
 
-        return "Данные успешно записаны";
+        memoryLink.saveLink(generatedShortLink, originalLink);
+
+        try {
+            model.addAttribute("shortLinkGenerated", generatedShortLink);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "home";
     }
 }

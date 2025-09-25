@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Link shortener</title>
+    </head>
+
+    <h1 align="center">Сайт по сокращению ссылок</h1>
+
+    <body>
+        <form th:action="@{generator_shortener_link/save_link}" method="post">
+            <label for="originalLink">Введите ссылку:</label>
+            <input type="text" id="originalLink" name="originalLink" placeholder="Введите ссылку">
+            <button type="submit">Сократить</button>
+        </form>
+        <p th:text="${linkGenerated}">Сокращенная ссылка</p>
+    </body>
+</html>

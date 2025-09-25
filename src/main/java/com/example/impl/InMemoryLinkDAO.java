@@ -1,9 +1,16 @@
 package com.example.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.TreeMap;
 
+@AllArgsConstructor
 public class InMemoryLinkDAO {
-    private final TreeMap<String, String> LINK = new TreeMap();
+    @Getter
+    @Setter
+    private final TreeMap<String, String> LINK;
     
     public void saveLink(String id, String link) {
         LINK.put(id, link);

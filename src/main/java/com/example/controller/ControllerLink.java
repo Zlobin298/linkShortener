@@ -18,7 +18,7 @@ public class ControllerLink {
     private final ILinkService service;
 
     @PostMapping("save_link")
-    public String saveLink(@RequestBody Link link) {
+    public String saveLink(@RequestBody String link) {
         service.saveLink(link);
         return "Данные записаны";
     }
