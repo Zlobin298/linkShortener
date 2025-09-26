@@ -10,11 +10,11 @@
     <h1 align="center">Сайт по сокращению ссылок</h1>
 
     <body>
-        <form th:action="@{generator_shortener_link/save_link}" method="post">
+        <form th:method="POST" th:action="@{/api/v1/link}" th:object="${linkShortener}" >
             <label for="originalLink">Введите ссылку:</label>
-            <input type="text" id="originalLink" name="originalLink" placeholder="Введите ссылку">
-            <button type="submit">Сократить</button>
+            <input type="text" id="originalLink" name="originalLink" placeholder="Введите ссылку"/>
+            <input type="submit" value="Сократить"/>
         </form>
-        <p th:text="${linkGenerated}">Сокращенная ссылка</p>
+        <p th:text="|Сокращенная ссылка: ${linkShortener}|"></p>
     </body>
 </html>

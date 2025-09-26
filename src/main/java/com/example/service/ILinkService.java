@@ -3,6 +3,6 @@ package com.example.service;
 import com.example.model.Link;
 
 public interface ILinkService {
-    Link saveLink(String link);
-    void deleetLink(String id);
+    void saveLink(Link link);
+    void deleteLink(String id);
 }
