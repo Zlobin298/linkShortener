@@ -2,17 +2,15 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Link shortener</title>
     </head>
 
     <h1 align="center">Сайт по сокращению ссылок</h1>
 
     <body>
-        <form th:method="POST" th:action="@{/api/v1/link}" th:object="${linkShortener}" >
-            <label for="originalLink">Введите ссылку:</label>
-            <input type="text" id="originalLink" name="originalLink" placeholder="Введите ссылку"/>
+        <form th:method="POST" th:action="@{/api/v1/link/save}" th:object="${originalLink}" >
+            <label for="link">Введите ссылку:</label>
+            <input type="text" id="link" name="*{link}" placeholder="Введите ссылку"/>
             <input type="submit" value="Сократить"/>
         </form>
         <p th:text="|Сокращенная ссылка: ${linkShortener}|"></p>

@@ -1,20 +1,17 @@
 package com.example.controller;
 
-import com.example.repository.InMemoryLinkDAO;
 import com.example.model.Link;
+import com.example.model.OriginalLink;
 import com.example.service.ILinkService;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.AllArgsConstructor;
-
 import java.util.concurrent.atomic.AtomicLong;
 
-@RestController
-@RequestMapping("/api/v1/link")
+@Controller
+@RequestMapping("/api/v1/link/")
 @AllArgsConstructor
 public class ControllerLink {
     private final ILinkService service;
@@ -44,10 +41,10 @@ public class ControllerLink {
         return encodeCounterToBase62(currentId);
     }
 
-    @GetMapping("/")
+    @GetMapping("/nn")
     public String showHomePage(Model model) {
         try {
-            model.addAttribute("linkShortener", generatedShortLink);
+            model.addAttribute("originalLink", new OriginalLink());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,14 +52,21 @@ public class ControllerLink {
         return "home";
     }
 
-    @PostMapping()
-    public String handleShortenRequest(@ModelAttribute("originalLink") String originalLink) {
+    @PostMapping("/save")
+    public String handleShortenRequest(@ModelAttribute("originalLink") OriginalLink originalLink, Model model) {
         generatedShortLink = generateShortLink();
 
-        Link link = new Link(generatedShortLink, originalLink);
+        Link link = new Link(generatedShortLink, originalLink.getLink());
 
         service.saveLink(link);
-        return "redirect:/api/v1/link";
+
+        try {
+            model.addAttribute("linkShortener", generatedShortLink);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "home";
     }
 }
 
