@@ -4,6 +4,7 @@ import com.example.model.Link;
 import com.example.repository.InMemoryLinkDAO;
 import com.example.service.ILinkService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Service
