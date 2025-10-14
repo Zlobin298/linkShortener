@@ -4,6 +4,8 @@ import com.example.model.Link;
 import com.example.model.OriginalLink;
 import com.example.service.ILinkService;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,63 +17,51 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping("/api/v1/link")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ControllerLink {
-    private final ILinkService service;
+    private final ILinkService SERVICE;
 
-    private static final AtomicLong counter = new AtomicLong(0);
+    private static final AtomicLong COUNTER = new AtomicLong(0);
     private static final String BASE62_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final String generatedShortLink = generateShortLink();
+
+    private String linkId;
 
     private static String encodeCounterToBase62(long id) {
-        if (id == 0) {
-            return "0";
-        }
-
         StringBuilder sb = new StringBuilder();
 
         while (id > 0) {
-            id = id / 62;
-            sb.append(BASE62_CHARS.charAt((int)(id % 62)));
+            sb.append(BASE62_CHARS.charAt((int) (id % 62)));
+            id /= 62;
         }
 
-        return sb.reverse().toString();
+        return "https://link_shorter/" + sb.reverse();
     }
 
     public static String generateShortLink() {
-        long currentId = counter.incrementAndGet();
+        long currentId = COUNTER.incrementAndGet();
         return encodeCounterToBase62(currentId);
     }
 
     @GetMapping("/nn")
     public String showHomePage(Model model) {
         try {
-            if (counter == null) {
-                model.addAttribute("originalLink", new OriginalLink());
-            } else {
-                model.addAttribute("linkShortener", generatedShortLink);
-            }
+            model.addAttribute("originalLink", new OriginalLink());
+            model.addAttribute("linkShortener", linkId);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("ERROR: " + e);
         }
 
         return "index";
     }
 
     @PostMapping("/save")
-    public String handleShortenRequest(@ModelAttribute("originalLink") OriginalLink originalLink, Model model) {
+    public String handleShortenRequest(@ModelAttribute("originalLink") OriginalLink originalLink) {
+        String generatedShortLink = generateShortLink();
         Link link = new Link(generatedShortLink, originalLink.getLink());
 
-        service.saveLink(link);
-
-        try {
-            model.addAttribute("linkShortener", generatedShortLink);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SERVICE.saveLink(link);
+        linkId = generatedShortLink;
 
         return "redirect:/api/v1/link/nn";
     }
 }
-
-

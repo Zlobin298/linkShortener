@@ -4,5 +4,4 @@ import com.example.model.Link;
 
 public interface ILinkService {
     void saveLink(Link link);
-    void deleteLink(String id);
 }

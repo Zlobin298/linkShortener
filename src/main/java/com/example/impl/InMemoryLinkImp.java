@@ -16,9 +16,4 @@ public class InMemoryLinkImp implements ILinkService {
     public void saveLink(Link link) {
         repository.saveLink(link);
     }
-
-    @Override
-    public void deleteLink(String id) {
-        repository.deleteLink(id);
-    }
 }
