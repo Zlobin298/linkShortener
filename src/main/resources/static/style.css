@@ -1,3 +1,31 @@
+/* Стиль для кнопки формы */
+input[type="submit"] {
+    background-color: #3498db; /* Приятный синий цвет */
+    color: white; /* Белый текст */
+    padding: 12px 25px; /* Внутренние отступы */
+    border: none; /* Убираем стандартную рамку */
+    border-radius: 8px; /* Скругленные углы */
+    font-size: 1.1em; /* Размер шрифта */
+    font-weight: 600; /* Жирный шрифт */
+    cursor: pointer; /* Курсор в виде руки при наведении */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Плавные переходы */
+    width: 100%; /* Занимает всю доступную ширину контейнера формы */
+    max-width: 350px; /* Ограничиваем максимальную ширину (можно убрать, если нужно, чтобы растягивалась полностью) */
+    box-sizing: border-box; /* padding и border включены в ширину */
+    letter-spacing: 0.5px; /* Небольшой интервал между буквами */
+}
+
+input[type="submit"]:hover {
+    background-color: #2980b9; /* Более темный синий при наведении */
+    transform: translateY(-2px); /* Легкий эффект "поднятия" */
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); /* Тень при наведении */
+}
+
+input[type="submit"]:active {
+    transform: translateY(0); /* Возврат при нажатии */
+    box-shadow: none; /* Убираем тень при нажатии */
+}
+
 /* Общие стили */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
