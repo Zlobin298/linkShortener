@@ -11,9 +11,9 @@
 <div class="container">
     <h2>🔗 Сокращатель ссылок 🔗</h2>
 
-    <form th:method="POST" th:action="@{/api/v1/link/save}" th:object="${originalLink}" >
-        <label for="link"></label>
-        <input type="url" id="link" name="*{link}" placeholder="Введите ссылку" required>
+    <form th:method="POST" th:action="@{/api/v1/link/save}">
+        <label for="link">Введите ссылку:</label>
+        <input type="url" id="link" name="link" placeholder="https://..." required>
         <button type="submit" class="submit-button">🚀 Сократить!</button>
     </form>
 

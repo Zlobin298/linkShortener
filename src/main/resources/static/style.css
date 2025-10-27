@@ -84,8 +84,7 @@ label {
 }
 
 /* Поле ввода */
-input[type="text"],
-input[type="url"] { /* Добавим type="url" для семантики */
+input[type="text"], input[type="url"] { /* Добавим type="url" для семантики */
     padding: 12px 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -96,8 +95,7 @@ input[type="url"] { /* Добавим type="url" для семантики */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     color: #333;
 }
-input[type="text"]:focus,
-input[type="url"]:focus {
+input[type="text"]:focus, input[type="url"]:focus {
     border-color: #3498db; /* Синий фокус */
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
     outline: none;

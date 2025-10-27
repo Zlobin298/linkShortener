@@ -1,18 +1,14 @@
 package com.example.controller;
 
 import com.example.model.Link;
-import com.example.model.OriginalLink;
+import com.example.repository.InMemoryLinkDAO;
 import com.example.service.ILinkService;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URL;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -45,7 +41,6 @@ public class ControllerLink {
     @GetMapping("/nn")
     public String showHomePage(Model model) {
         try {
-            model.addAttribute("originalLink", new OriginalLink());
             model.addAttribute("linkShortener", linkId);
         } catch (Exception e) {
             System.err.println("ERROR: " + e);
@@ -55,11 +50,11 @@ public class ControllerLink {
     }
 
     @PostMapping("/save")
-    public String handleShortenRequest(@ModelAttribute("originalLink") OriginalLink originalLink) {
+    public String handleShortenRequest(@RequestParam URL link) {
         String generatedShortLink = generateShortLink();
-        Link link = new Link(generatedShortLink, originalLink.getLink());
+        Link myLink = new Link(generatedShortLink, String.valueOf(link));
 
-        SERVICE.saveLink(link);
+        SERVICE.saveLink(myLink);
         linkId = generatedShortLink;
 
         return "redirect:/api/v1/link/nn";
