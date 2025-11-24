@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicLong;
@@ -30,7 +31,7 @@ public class ControllerLink {
             id /= 62;
         }
 
-        return "https://link_shorter/" + sb.reverse();
+        return "https://localhost:8080/" + sb.reverse();
     }
 
     public static String generateShortLink() {
@@ -58,5 +59,13 @@ public class ControllerLink {
         linkId = generatedShortLink;
 
         return "redirect:/api/v1/link/nn";
+    }
+
+    @GetMapping("/{link}")
+    public String transferNewLink(@PathVariable String link) {
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl(link);
+
+        return "redirect:" + SERVICE.fetchOriginalLink(String.valueOf(redirectView));
     }
 }

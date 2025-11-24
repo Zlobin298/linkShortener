@@ -16,4 +16,9 @@ public class InMemoryLinkImp implements ILinkService {
     public void saveLink(Link link) {
         repository.saveLink(link);
     }
+
+    @Override
+    public String fetchOriginalLink(String sorterLink) {
+        return repository.fetchOriginalLink(sorterLink);
+    }
 }

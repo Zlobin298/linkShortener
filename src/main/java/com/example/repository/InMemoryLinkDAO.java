@@ -5,10 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 @Repository
 public class InMemoryLinkDAO {
@@ -34,5 +31,25 @@ public class InMemoryLinkDAO {
         } catch (SQLException e) {
             logger.error("Error saving link: ", e);
         }
+    }
+
+    public String fetchOriginalLink(String sorterLink) {
+        String sql = "SELECT original_link FROM link WHERE link.shorter_link = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, sorterLink);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("original_link");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
