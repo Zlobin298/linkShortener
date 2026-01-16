@@ -1,7 +1,6 @@
 package com.example.controller;
 
 import com.example.model.Link;
-import com.example.repository.InMemoryLinkDAO;
 import com.example.service.ILinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -9,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.SecureRandom;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Controller
 @RequestMapping
@@ -23,21 +21,20 @@ public class ControllerLink {
     private String linkId;
     private String originalLink;
 
-    private String encodeCounterToBase62() {
-        if (!SERVICE.isRecordAbsent(originalLink)) {
-            StringBuilder sb = new StringBuilder();
+    private static String encodeCounterToBase62() {
+        StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < 5; i++) {
-                int index = RANDOM.nextInt(CHARACTERS.length());
-                sb.append(CHARACTERS.charAt(index));
-            }
-
-            System.err.println(sb);
-
-            return "http://localhost:8080/link/" + sb;
+        for (int i = 0; i < 9; i++) {
+            int index = RANDOM.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(index));
         }
 
-        return SERVICE.getEncodedLink(originalLink);
+        return "http://localhost:8080/" + sb;
+    }
+
+    private String generateShortLink() {
+        if (SERVICE.isRecordAbsent(originalLink)) return SERVICE.getEncodedLink(originalLink);
+        return encodeCounterToBase62();
     }
 
     @GetMapping
@@ -53,20 +50,19 @@ public class ControllerLink {
 
     @PostMapping("save")
     public String handleShortenRequest(@RequestParam String link) {
-        String generateShortLink = encodeCounterToBase62();
+        originalLink = link;
+
+        String generateShortLink = generateShortLink();
         Link myLink = new Link(generateShortLink, link);
 
         SERVICE.saveLink(myLink);
         linkId = generateShortLink;
-        originalLink = link;
 
         return "redirect:/";
     }
 
-    @GetMapping("/link/{link}")
+    @GetMapping("/{link}")
     public String transferNewLink(@PathVariable String link) {
-        System.out.println(link);
-
         return "redirect:" + SERVICE.fetchOriginalLink(link);
     }
 }

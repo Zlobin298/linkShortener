@@ -56,19 +56,19 @@ public class InMemoryLinkDAO {
         String shorter_link = link.getId();
         String original_link = link.getLink();
 
-        if (!isRecordAbsent(original_link)) {
-            String sql = "INSERT INTO link (shorter_link, original_link) VALUES (?, ?);";
+        String sql = "INSERT INTO link (shorter_link, original_link) VALUES (?, ?);";
 
-            try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            if (!isRecordAbsent(original_link)) {
                 pstmt.setString(1, shorter_link);
                 pstmt.setString(2, original_link);
 
                 int rowsAffected = pstmt.executeUpdate();
                 logger.info("Rows affected: {}", rowsAffected);
-            } catch (SQLException e) {
-                logger.error("Error saving link: ", e);
             }
+        } catch (SQLException e) {
+            logger.error("Error saving link: ", e);
         }
     }
 
@@ -77,7 +77,7 @@ public class InMemoryLinkDAO {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement pstmt = conn.prepareStatement(sql);) {
-            pstmt.setString(1, "http://localhost:8080/link/" + sorterLink);
+            pstmt.setString(1, "http://localhost:8080/" + sorterLink);
 
             try (ResultSet resultSet = pstmt.executeQuery()) {
                 if (resultSet.next()) {
