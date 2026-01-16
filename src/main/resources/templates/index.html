@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сокращатель ссылок</title>
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
     <h2>🔗 Сокращатель ссылок 🔗</h2>
 
-    <form th:method="POST" th:action="@{/api/v1/link/save}">
+    <form th:method="POST" th:action="@{save}">
         <label for="link">Введите ссылку:</label>
         <input type="url" id="link" name="link" placeholder="https://..." required>
         <button type="submit" class="submit-button">🚀 Сократить!</button>
@@ -19,7 +19,7 @@
 
     <div th:if="${linkShortener}" class="result-container">
         <p class="result-label">✅ Ваша новая короткая ссылка:</p>
-        <a href="#" th:href="${linkShortener}" class="result-link" target="_blank" th:text="${linkShortener}">/shortlink</a>
+        <a href="#" th:href="${linkShortener}" class="result-link" target="_blank" th:text="${linkShortener}"></a>
     </div>
 </div>
 

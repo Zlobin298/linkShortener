@@ -5,4 +5,6 @@ import com.example.model.Link;
 public interface ILinkService {
     void saveLink(Link link);
     String fetchOriginalLink(String sorterLink);
+    boolean isRecordAbsent(String original_link);
+    String getEncodedLink(String original_link);
 }

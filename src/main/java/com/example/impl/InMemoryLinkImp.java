@@ -21,4 +21,14 @@ public class InMemoryLinkImp implements ILinkService {
     public String fetchOriginalLink(String sorterLink) {
         return repository.fetchOriginalLink(sorterLink);
     }
+
+    @Override
+    public boolean isRecordAbsent(String original_link) {
+        return repository.isRecordAbsent(original_link);
+    }
+
+    @Override
+    public String getEncodedLink(String original_link) {
+        return repository.getEncodedLink(original_link);
+    }
 }

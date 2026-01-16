@@ -7,39 +7,40 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.net.URL;
-import java.util.concurrent.atomic.AtomicLong;
+import java.security.SecureRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Controller
-@RequestMapping("/api/v1/link")
+@RequestMapping
 @RequiredArgsConstructor
 public class ControllerLink {
     private final ILinkService SERVICE;
 
-    private static final AtomicLong COUNTER = new AtomicLong(0);
-    private static final String BASE62_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private String linkId;
+    private String originalLink;
 
-    private static String encodeCounterToBase62(long id) {
-        StringBuilder sb = new StringBuilder();
+    private String encodeCounterToBase62() {
+        if (!SERVICE.isRecordAbsent(originalLink)) {
+            StringBuilder sb = new StringBuilder();
 
-        while (id > 0) {
-            sb.append(BASE62_CHARS.charAt((int) (id % 62)));
-            id /= 62;
+            for (int i = 0; i < 5; i++) {
+                int index = RANDOM.nextInt(CHARACTERS.length());
+                sb.append(CHARACTERS.charAt(index));
+            }
+
+            System.err.println(sb);
+
+            return "http://localhost:8080/link/" + sb;
         }
 
-        return "https://localhost:8080/" + sb.reverse();
+        return SERVICE.getEncodedLink(originalLink);
     }
 
-    public static String generateShortLink() {
-        long currentId = COUNTER.incrementAndGet();
-        return encodeCounterToBase62(currentId);
-    }
-
-    @GetMapping("/nn")
+    @GetMapping
     public String showHomePage(Model model) {
         try {
             model.addAttribute("linkShortener", linkId);
@@ -50,22 +51,22 @@ public class ControllerLink {
         return "index";
     }
 
-    @PostMapping("/save")
-    public String handleShortenRequest(@RequestParam URL link) {
-        String generatedShortLink = generateShortLink();
-        Link myLink = new Link(generatedShortLink, String.valueOf(link));
+    @PostMapping("save")
+    public String handleShortenRequest(@RequestParam String link) {
+        String generateShortLink = encodeCounterToBase62();
+        Link myLink = new Link(generateShortLink, link);
 
         SERVICE.saveLink(myLink);
-        linkId = generatedShortLink;
+        linkId = generateShortLink;
+        originalLink = link;
 
-        return "redirect:/api/v1/link/nn";
+        return "redirect:/";
     }
 
-    @GetMapping("/{link}")
+    @GetMapping("/link/{link}")
     public String transferNewLink(@PathVariable String link) {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(link);
+        System.out.println(link);
 
-        return "redirect:" + SERVICE.fetchOriginalLink(String.valueOf(redirectView));
+        return "redirect:" + SERVICE.fetchOriginalLink(link);
     }
 }

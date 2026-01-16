@@ -1,37 +1,35 @@
-/* Стиль для кнопки формы */
 input[type="submit"] {
-    background-color: #3498db; /* Приятный синий цвет */
-    color: white; /* Белый текст */
-    padding: 12px 25px; /* Внутренние отступы */
-    border: none; /* Убираем стандартную рамку */
-    border-radius: 8px; /* Скругленные углы */
-    font-size: 1.1em; /* Размер шрифта */
-    font-weight: 600; /* Жирный шрифт */
-    cursor: pointer; /* Курсор в виде руки при наведении */
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Плавные переходы */
-    width: 100%; /* Занимает всю доступную ширину контейнера формы */
-    max-width: 350px; /* Ограничиваем максимальную ширину (можно убрать, если нужно, чтобы растягивалась полностью) */
-    box-sizing: border-box; /* padding и border включены в ширину */
-    letter-spacing: 0.5px; /* Небольшой интервал между буквами */
+    background-color: #3498db;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0;
+    width: 100%;
+    max-width: 350px;
+    box-sizing: border-box;
+    letter-spacing: 0.5px;
 }
 
 input[type="submit"]:hover {
-    background-color: #2980b9; /* Более темный синий при наведении */
-    transform: translateY(-2px); /* Легкий эффект "поднятия" */
-    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); /* Тень при наведении */
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
 }
 
 input[type="submit"]:active {
-    transform: translateY(0); /* Возврат при нажатии */
-    box-shadow: none; /* Убираем тень при нажатии */
+    transform: translateY(0);
+    box-shadow: none;
 }
 
-/* Общие стили */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 20px;
-    background-color: #f7f9fc; /* Очень легкий голубовато-серый */
+    background-color: #f7f9fc;
     color: #333;
     display: flex;
     flex-direction: column;
@@ -41,28 +39,25 @@ body {
     box-sizing: border-box;
 }
 
-/* Контейнер */
 .container {
-    background-color: #ffffff; /* Чистый белый */
+    background-color: #ffffff;
     padding: 30px 40px;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Мягкая тень */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     text-align: center;
     max-width: 500px;
     width: 100%;
     box-sizing: border-box;
 }
 
-/* Заголовок */
-h1 {
-    color: #2c3e50; /* Темно-синий */
+h2 {
+    color: #2c3e50;
     margin-bottom: 30px;
     font-size: 2.1em;
     font-weight: 700;
     letter-spacing: 0.5px;
 }
 
-/* Форма */
 form {
     margin-bottom: 30px;
     display: flex;
@@ -71,7 +66,6 @@ form {
     gap: 15px;
 }
 
-/* Метка */
 label {
     font-size: 1.08em;
     color: #555;
@@ -83,8 +77,7 @@ label {
     font-weight: 500;
 }
 
-/* Поле ввода */
-input[type="text"], input[type="url"] { /* Добавим type="url" для семантики */
+input[type="text"], input[type="url"] {
     padding: 12px 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -96,14 +89,13 @@ input[type="text"], input[type="url"] { /* Добавим type="url" для се
     color: #333;
 }
 input[type="text"]:focus, input[type="url"]:focus {
-    border-color: #3498db; /* Синий фокус */
+    border-color: #3498db;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
     outline: none;
 }
 
-/* Кнопка */
 button[type="submit"] {
-    background-color: #3498db; /* Синий */
+    background-color: #3498db;
     color: white;
     padding: 12px 25px;
     border: none;
@@ -118,7 +110,7 @@ button[type="submit"] {
     letter-spacing: 0.5px;
 }
 button[type="submit"]:hover {
-    background-color: #2980b9; /* Темнее синий */
+    background-color: #2980b9;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
 }
@@ -127,11 +119,10 @@ button[type="submit"]:active {
     box-shadow: none;
 }
 
-/* Результат */
 .result-container {
     margin-top: 30px;
     padding: 20px;
-    background-color: #eaf4fc; /* Светло-голубой */
+    background-color: #eaf4fc;
     border: 1px solid #cce0f3;
     border-radius: 10px;
     font-size: 1.15em;
@@ -141,20 +132,20 @@ button[type="submit"]:active {
 }
 .result-container p {
     margin: 8px 0;
-    font-size: 1em; /* Размер для основного текста результата */
+    font-size: 1em;
 }
 .result-container .result-label {
     font-weight: 700;
     color: #2c3e50;
     margin-bottom: 10px;
     display: block;
-    font-size: 1em; /* Размер ярлыка */
+    font-size: 1em;
 }
 .result-container .result-link {
     font-weight: bold;
     color: #3498db;
     text-decoration: none;
-    font-size: 1.3em; /* Крупнее сама ссылка */
+    font-size: 1.3em;
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 .result-container .result-link:hover {
@@ -163,27 +154,12 @@ button[type="submit"]:active {
     text-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
 }
 
-/* Сообщение об ошибке */
-.error-message {
-    color: #e74c3c; /* Красный */
-    font-weight: 600;
-    margin-top: 20px;
-    padding: 12px 20px;
-    border: 1px solid #f1aeb5;
-    background-color: #fdeeee;
-    border-radius: 8px;
-    text-align: left;
-    font-size: 1em;
-    box-shadow: 0 2px 5px rgba(231, 76, 60, 0.2);
-}
-
-/* Адаптивность */
 @media (max-width: 600px) {
     .container {
         padding: 25px 20px;
         margin: 15px;
     }
-    h1 {
+    h2 {
         font-size: 1.8em;
     }
     label, input, button {
