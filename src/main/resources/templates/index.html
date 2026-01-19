@@ -18,8 +18,16 @@
     </form>
 
     <div th:if="${linkShortener}" class="result-container">
-        <p class="result-label">✅ Ваша новая короткая ссылка:</p>
-        <a href="#" th:href="${linkShortener}" class="result-link" target="_blank" th:text="${linkShortener}"></a>
+        <p class="result-label">
+            <span th:if="${linkShortener == 'Укажите существующую ссылку'}">
+                ✅ Укажите существующую ссылку
+            </span>
+            <span th:if="${linkShortener != 'Укажите существующую ссылку'}">
+                ✅ Ваша новая короткая ссылка:
+                <br>
+                <a href="#" th:href="${linkShortener}" class="result-link" target="_blank" th:text="${linkShortener}"></a>
+            </span>
+        </p>
     </div>
 </div>
 

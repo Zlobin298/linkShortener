@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.SecureRandom;
 
 @Controller
@@ -20,6 +22,23 @@ public class LinkController {
 
     private String linkId;
     private String originalLink;
+
+    private boolean isExistsLink() {
+        try {
+            URL url = new URL(originalLink);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            connection.setConnectTimeout(1000);
+            connection.setReadTimeout(1000);
+            int responseCode = connection.getResponseCode();
+
+            return responseCode == HttpURLConnection.HTTP_OK;
+        } catch (Exception e) {
+            System.out.println("Ошибка при проверке ссылки: " + e.getMessage());
+        }
+
+        return false;
+    }
 
     private static String encodeCounterToBase62() {
         StringBuilder sb = new StringBuilder();
@@ -40,7 +59,11 @@ public class LinkController {
     @GetMapping("/home")
     public String showHomePage(Model model) {
         try {
-            model.addAttribute("linkShortener", linkId);
+            if (isExistsLink()) {
+                model.addAttribute("linkShortener", linkId);
+            } else {
+                model.addAttribute("linkShortener", "Укажите существующую ссылку");
+            }
         } catch (Exception e) {
             System.err.println("ERROR: " + e);
         }
@@ -52,11 +75,13 @@ public class LinkController {
     public String handleShortenRequest(@RequestParam String link) {
         originalLink = link;
 
-        String generateShortLink = generateShortLink();
-        Link myLink = new Link(generateShortLink, link);
+        if (isExistsLink()) {
+            String generateShortLink = generateShortLink();
+            Link myLink = new Link(generateShortLink, link);
 
-        SERVICE.saveLink(myLink);
-        linkId = generateShortLink;
+            SERVICE.saveLink(myLink);
+            linkId = generateShortLink;
+        }
 
         return "redirect:/home";
     }
