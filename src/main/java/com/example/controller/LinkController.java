@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.model.Link;
-import com.example.service.ILinkService;
+import com.example.service.LinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +12,8 @@ import java.security.SecureRandom;
 @Controller
 @RequestMapping
 @RequiredArgsConstructor
-public class ControllerLink {
-    private final ILinkService SERVICE;
+public class LinkController {
+    private final LinkService SERVICE;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -29,7 +29,7 @@ public class ControllerLink {
             sb.append(CHARACTERS.charAt(index));
         }
 
-        return "http://localhost:8080/" + sb;
+        return "http://localhost:8080/link/" + sb;
     }
 
     private String generateShortLink() {
@@ -37,7 +37,7 @@ public class ControllerLink {
         return encodeCounterToBase62();
     }
 
-    @GetMapping
+    @GetMapping("/home")
     public String showHomePage(Model model) {
         try {
             model.addAttribute("linkShortener", linkId);
@@ -58,10 +58,10 @@ public class ControllerLink {
         SERVICE.saveLink(myLink);
         linkId = generateShortLink;
 
-        return "redirect:/";
+        return "redirect:/home";
     }
 
-    @GetMapping("/{link}")
+    @GetMapping("/link/{link}")
     public String transferNewLink(@PathVariable String link) {
         return "redirect:" + SERVICE.fetchOriginalLink(link);
     }

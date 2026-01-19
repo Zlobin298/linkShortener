@@ -2,7 +2,7 @@ package com.example.service;
 
 import com.example.model.Link;
 
-public interface ILinkService {
+public interface LinkService {
     void saveLink(Link link);
     String fetchOriginalLink(String sorterLink);
     boolean isRecordAbsent(String original_link);
