@@ -17,49 +17,13 @@ import java.security.SecureRandom;
 public class LinkController {
     private final LinkService SERVICE;
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final SecureRandom RANDOM = new SecureRandom();
-
     private String linkId;
     private String originalLink;
-
-    private boolean isExistsLink() {
-        try {
-            URL url = new URL(originalLink);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(1000);
-            connection.setReadTimeout(1000);
-            int responseCode = connection.getResponseCode();
-
-            return responseCode == HttpURLConnection.HTTP_OK;
-        } catch (Exception e) {
-            System.out.println("Ошибка при проверке ссылки: " + e.getMessage());
-        }
-
-        return false;
-    }
-
-    private static String encodeCounterToBase62() {
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < 9; i++) {
-            int index = RANDOM.nextInt(CHARACTERS.length());
-            sb.append(CHARACTERS.charAt(index));
-        }
-
-        return "http://localhost:8080/link/" + sb;
-    }
-
-    private String generateShortLink() {
-        if (SERVICE.isRecordAbsent(originalLink)) return SERVICE.getEncodedLink(originalLink);
-        return encodeCounterToBase62();
-    }
 
     @GetMapping("/home")
     public String showHomePage(Model model) {
         try {
-            if (isExistsLink()) {
+            if (SERVICE.isExistsLink(originalLink)) {
                 model.addAttribute("linkShortener", linkId);
             } else {
                 model.addAttribute("linkShortener", "Укажите существующую ссылку");
@@ -75,8 +39,8 @@ public class LinkController {
     public String handleShortenRequest(@RequestParam String link) {
         originalLink = link;
 
-        if (isExistsLink()) {
-            String generateShortLink = generateShortLink();
+        if (SERVICE.isExistsLink(originalLink)) {
+            String generateShortLink = SERVICE.generateShortLink(originalLink);
             Link myLink = new Link(generateShortLink, link);
 
             SERVICE.saveLink(myLink);

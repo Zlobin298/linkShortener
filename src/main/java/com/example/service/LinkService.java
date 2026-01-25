@@ -3,8 +3,10 @@ package com.example.service;
 import com.example.model.Link;
 
 public interface LinkService {
-    void saveLink(Link link);
     String fetchOriginalLink(String sorterLink);
-    boolean isRecordAbsent(String original_link);
     String getEncodedLink(String original_link);
+    String generateShortLink(String originalLink);
+    boolean isRecordAbsent(String original_link);
+    boolean isExistsLink(String originalLink);
+    void saveLink(Link link);
 }
