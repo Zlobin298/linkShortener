@@ -6,6 +6,7 @@ import com.example.service.LinkService;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.HttpURLConnection;
@@ -17,29 +18,31 @@ import java.security.SecureRandom;
 public class LinkServiceImpl implements LinkService {
     private final LinkRepository repository;
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private static final SecureRandom RANDOM = new SecureRandom();
+    @Value("${spring.application.url}")
+    private String url;
 
-    private static String encodeCounterToBase62() {
-        StringBuilder sb = new StringBuilder();
+    private static String encodeCounterToBase62(String url) {
+        StringBuilder sb = new StringBuilder(url + "link/");
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom rn = new SecureRandom();
 
         for (int i = 0; i < 9; i++) {
-            int index = RANDOM.nextInt(CHARACTERS.length());
-            sb.append(CHARACTERS.charAt(index));
+            int index = rn.nextInt(chars.length());
+            sb.append(chars.charAt(index));
         }
 
-        return "http://localhost:8080/link/" + sb;
+        return sb.toString();
     }
 
     @Override
     public String generateShortLink(String originalLink) {
         if (isRecordAbsent(originalLink)) return getEncodedLink(originalLink);
-        return encodeCounterToBase62();
+        return encodeCounterToBase62(url);
     }
 
     @Override
     public String fetchOriginalLink(String shorterLink) {
-        return repository.findById("http://localhost:8080/link/" + shorterLink)
+        return repository.findById(url + "link/" + shorterLink)
                 .map(Link::getLink)
                 .orElse(null);
     }
@@ -47,7 +50,7 @@ public class LinkServiceImpl implements LinkService {
     @Override
     public String getEncodedLink(String originalLink) {
         return repository.findByLink(originalLink)
-                .map(Link::getId)
+                .map(Link::getShorterLink)
                 .orElse(null);
     }
 
@@ -63,7 +66,7 @@ public class LinkServiceImpl implements LinkService {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("HEAD");
             connection.setConnectTimeout(1000);
-            connection.setReadTimeout(1000);
+            connection.setReadTimeout(7000);
             int responseCode = connection.getResponseCode();
 
             return responseCode == HttpURLConnection.HTTP_OK;

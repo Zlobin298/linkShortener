@@ -1,6 +1,7 @@
 spring:
   application:
     name: linkShortener
+    url: !!str "http://localhost:8080/"
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html

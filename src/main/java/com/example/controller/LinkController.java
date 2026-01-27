@@ -17,14 +17,14 @@ import java.security.SecureRandom;
 public class LinkController {
     private final LinkService SERVICE;
 
-    private String linkId;
+    private String shorterLink;
     private String originalLink;
 
     @GetMapping("/home")
     public String showHomePage(Model model) {
         try {
             if (SERVICE.isExistsLink(originalLink)) {
-                model.addAttribute("linkShortener", linkId);
+                model.addAttribute("linkShortener", shorterLink);
             } else {
                 model.addAttribute("linkShortener", "Укажите существующую ссылку");
             }
@@ -44,7 +44,7 @@ public class LinkController {
             Link myLink = new Link(generateShortLink, link);
 
             SERVICE.saveLink(myLink);
-            linkId = generateShortLink;
+            shorterLink = generateShortLink;
         }
 
         return "redirect:/home";

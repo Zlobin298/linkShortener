@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Link {
     @Id
     @Column(name = "shorter_link", nullable = false)
-    private String id;
+    private String shorterLink;
 
     @Column(name = "original_link", nullable = false)
     private String link;
