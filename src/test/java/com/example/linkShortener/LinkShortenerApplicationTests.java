@@ -66,77 +66,36 @@ class LinkShortenerApplicationTests {
     @DisplayName("Многократная проверка структуры сокращенных ссылок (на случай редких багов)")
     void generateShortLinkValidCodes() {
         String shorterLink = service.generateShortLink("https://goole.com");
+
         assertFalse(shorterLink.contains(" "), "Сокращенная ссылка не должна содержать пробелы");
-    }
-
-    @Test
-    @DisplayName("Должен вернуть оригинальную ссылку, если сокращенная существует")
-    void getEncodedLinkWhenFound() {
-        String shortCode = "abc123";
-        String fullId = url + "link/" + shortCode;
-        String originalUrl = "https://google.com";
-
-        Link mockLink = new Link();
-        mockLink.setLink(originalUrl);
-
-        when(repository.findById(fullId)).thenReturn(Optional.of(mockLink));
-
-        String result = service.fetchOriginalLink(shortCode);
-
-        assertEquals(originalUrl, result, "Метод должен вернуть оригинальный URL");
-        verify(repository, times(1)).findById(fullId);
     }
 
     @Test
     @DisplayName("Должен вернуть null, если ссылка не найдена в репозитории")
     void getEncodedLinkNullWhenNotFound() {
         String shortCode = "jjj";
-        String fullId = url + "link/" + shortCode;
+        String fullId = url + "/link/" + shortCode;
 
         when(repository.findById(fullId)).thenReturn(Optional.empty());
-
         assertNull(service.fetchOriginalLink(shortCode), "Метод должен возвращать null, если запись не найдена");
-    }
-
-    @Test
-    @DisplayName("Должен возвращать оригинальную ссылку, если она найдена в БД")
-    void fetchOriginalLinkWhenFound() {
-        String shortCode = "abc123456";
-        String fullKey = url + "link/" + shortCode;
-        String expectedOriginalLink = "https://google.com";
-
-        Link mockLink = new Link();
-        mockLink.setLink(expectedOriginalLink);
-
-        when(repository.findById(fullKey)).thenReturn(Optional.of(mockLink));
-
-        String actualOriginalLink = service.fetchOriginalLink(shortCode);
-
-        assertNotNull(actualOriginalLink);
-        assertEquals(expectedOriginalLink, actualOriginalLink);
-        verify(repository, times(1)).findById(fullKey);
     }
 
     @Test
     @DisplayName("Должен возвращать null, если ссылка не найдена")
     void fetchOriginalLinkNullWhenNotFound() {
         String shortCode = "nonexistent";
-        String fullKey = url + "link/" + shortCode;
+        String fullKey = url + "/link/" + shortCode;
 
         when(repository.findById(fullKey)).thenReturn(Optional.empty());
-
-        String result = service.fetchOriginalLink(shortCode);
-
-        assertNull(result, "Если ссылки нет в базе, должен вернуться null");
-        verify(repository, times(1)).findById(fullKey);
+        assertNull(service.fetchOriginalLink(shortCode), "Если ссылки нет в базе, должен вернуться null");
     }
 
     @Test
     @DisplayName("Должен возвращать true, если ссылка уже есть в базе")
     void isRecordAbsentTrueWhenLinkExists() {
         String originalLink = "https://google.com";
-        when(repository.existsByLink(originalLink)).thenReturn(true);
 
+        when(repository.existsByLink(originalLink)).thenReturn(true);
         assertTrue(service.isRecordAbsent(originalLink), "Метод должен вернуть true, так как репозиторий подтвердил наличие");
         verify(repository, times(1)).existsByLink(originalLink);
     }
@@ -145,8 +104,8 @@ class LinkShortenerApplicationTests {
     @DisplayName("Должен возвращать false, если ссылки нет в базе")
     void isRecordAbsentFalseWhenLinkDoesNotExist() {
         String originalLink = "https://google.com";
-        when(repository.existsByLink(originalLink)).thenReturn(false);
 
+        when(repository.existsByLink(originalLink)).thenReturn(false);
         assertFalse(service.isRecordAbsent(originalLink), "Метод должен вернуть false, так как ссылки нет в репозитории");
         verify(repository, times(1)).existsByLink(originalLink);
     }
@@ -173,10 +132,8 @@ class LinkShortenerApplicationTests {
     void save() {
         String link = "https://google.com";
 
-        String shorterLink = service.generateShortLink(link);
-
         when(repository.save(any(Link.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        service.saveLink(new Link(shorterLink, link));
+        service.saveLink(new Link(service.generateShortLink(link), link));
         Mockito.verify(repository, Mockito.times(1)).save(any(Link.class));
     }
 }

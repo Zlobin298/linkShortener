@@ -22,7 +22,7 @@ public class LinkServiceImpl implements LinkService {
     private String url;
 
     private static String encodeCounterToBase62(String url) {
-        StringBuilder sb = new StringBuilder(url + "link/");
+        StringBuilder sb = new StringBuilder(url + "/link/");
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom rn = new SecureRandom();
 
@@ -42,7 +42,7 @@ public class LinkServiceImpl implements LinkService {
 
     @Override
     public String fetchOriginalLink(String shorterLink) {
-        return repository.findById(url + "link/" + shorterLink)
+        return repository.findById(url + "/link/" + shorterLink)
                 .map(Link::getLink)
                 .orElse(null);
     }
