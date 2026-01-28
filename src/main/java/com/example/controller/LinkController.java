@@ -1,7 +1,9 @@
 package com.example.controller;
 
+import com.example.dto.LinkDTO;
 import com.example.model.Link;
 import com.example.service.LinkService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,12 +38,12 @@ public class LinkController {
     }
 
     @PostMapping("save")
-    public String handleShortenRequest(@RequestParam String link) {
-        originalLink = link;
+    public String handleShortenRequest(@Valid LinkDTO dto) {
+        originalLink = dto.getLink();
 
         if (SERVICE.isExistsLink(originalLink)) {
             String generateShortLink = SERVICE.generateShortLink(originalLink);
-            Link myLink = new Link(generateShortLink, link);
+            Link myLink = new Link(generateShortLink, dto.getLink());
 
             SERVICE.saveLink(myLink);
             shorterLink = generateShortLink;
