@@ -73,9 +73,11 @@ public class LinkServiceImpl implements LinkService {
             int responseCode = connection.getResponseCode();
 
             return responseCode == HttpURLConnection.HTTP_OK;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.err.println("ERROR: " + e.getMessage());
         }
+
+        return false;
     }
 
     @Override
