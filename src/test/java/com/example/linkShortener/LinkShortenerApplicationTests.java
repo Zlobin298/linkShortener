@@ -1,10 +1,5 @@
 package com.example.linkShortener;
 
-import com.example.model.Link;
-import com.example.repository.LinkRepository;
-import com.example.service.impl.LinkServiceImpl;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

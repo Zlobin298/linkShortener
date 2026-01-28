@@ -9,7 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.SecureRandom;
 
@@ -70,11 +73,9 @@ public class LinkServiceImpl implements LinkService {
             int responseCode = connection.getResponseCode();
 
             return responseCode == HttpURLConnection.HTTP_OK;
-        } catch (Exception e) {
-            System.out.println("Ошибка при проверке ссылки: " + e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        return false;
     }
 
     @Override
